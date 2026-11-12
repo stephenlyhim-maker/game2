@@ -1,17 +1,40 @@
-<!doctype html>
+<!-- index.html -->
+<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/game2/favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/game2/style.css">
-    <title>Phaser React Template</title>
-  <script type="module" crossorigin src="/game2/assets/index-lbDOTw1J.js"></script>
-  <link rel="modulepreload" crossorigin href="/game2/assets/phaser-wSIpmmvX.js">
-</head>
-
-<body>
-    <div id="root"></div>
-
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <title>Isekai Blade</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: #07050c;
+        overflow: hidden;
+      }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #game {
+        width: 100vw;
+        height: 56.25vw;
+        max-width: 177.78vh;
+        max-height: 100vh;
+        box-shadow: 0 0 50px rgba(120, 80, 220, 0.35);
+      }
+      canvas {
+        display: block;
+        image-rendering: pixelated;
+      }
+    </style>
+    <script type="module" crossorigin src="/game2/assets/index-BlUc-yNg.js"></script>
+    <link rel="modulepreload" crossorigin href="/game2/assets/phaser-0LomWKsX.js">
+  </head>
+  <body>
+    <div id="game"></div>
+  </body>
 </html>
