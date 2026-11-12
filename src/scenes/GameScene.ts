@@ -70,6 +70,7 @@ export class GameScene extends Phaser.Scene {
     this.buildTerrain();
 
     this.player = new Player(this, this.level.spawn.x, this.level.spawn.y);
+    this.physics.add.collider(this.player, this.platformGroup);
     this.cameras.main.startFollow(this.player, true, 0.13, 0.09);
 
     this.portal = new Portal(this, this.level.goal);
@@ -99,28 +100,41 @@ export class GameScene extends Phaser.Scene {
   private buildTerrain(): void {
     this.platformGroup = this.physics.add.staticGroup();
 
-    const ground = this.add
+    // --- Ground ---
+    // 1. Visual ground
+    this.add
       .tileSprite(0, this.level.groundY, this.level.width, 120, 'ground')
       .setOrigin(0, 0)
       .setDepth(DEPTH.TERRAIN);
 
-    this.platformGroup.add(ground);
+    // 2. Physics ground (Invisible Zone)
+    const groundZone = this.add.zone(0, this.level.groundY, this.level.width, 120).setOrigin(0, 0);
+    this.platformGroup.add(groundZone);
+
     this.platformRects.push(new Phaser.Geom.Rectangle(0, this.level.groundY, this.level.width, 120));
 
+    // --- Floating Platforms ---
     for (const p of this.level.platforms) {
       if (p.ground) continue;
-      const ts = this.add
+      
+      // 1. Visual platform
+      this.add
         .tileSprite(p.x, p.y, p.w, p.h, 'platform')
         .setOrigin(0, 0)
         .setDepth(DEPTH.TERRAIN + 1);
-      this.platformGroup.add(ts);
+        
+      // 2. Physics platform (Invisible Zone)
+      const zone = this.add.zone(p.x, p.y, p.w, p.h).setOrigin(0, 0);
+      this.platformGroup.add(zone);
+
       this.platformRects.push(new Phaser.Geom.Rectangle(p.x, p.y, p.w, p.h));
     }
 
+    // --- Enemies ---
     this.enemyGroup = this.physics.add.group();
     this.physics.add.collider(this.enemyGroup, this.platformGroup);
   }
-
+  
   spawnEnemy(type: EnemyType, x: number, y?: number): void {
     const enemy = createEnemy(this, type, x, y);
     this.enemies.push(enemy);
