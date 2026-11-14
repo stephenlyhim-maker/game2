@@ -1,6 +1,5 @@
 // ============================================================
 // src/systems/SaveSystem.ts
-// Thin localStorage wrapper for settings / meta progress.
 // ============================================================
 
 export interface SaveData {
@@ -9,9 +8,10 @@ export interface SaveData {
   unlockedCharacters: string[];
   gold: number;
   inventory: { id: string; qty: number }[];
+  tutorialDone: boolean;
 }
 
-const KEY = 'isekai-blade-save-v1';
+const KEY = 'isekai-blade-save-v2';
 
 const DEFAULTS: SaveData = {
   bestTimeSec: 0,
@@ -19,6 +19,7 @@ const DEFAULTS: SaveData = {
   unlockedCharacters: ['blade'],
   gold: 0,
   inventory: [],
+  tutorialDone: false,
 };
 
 export const SaveSystem = {
@@ -27,19 +28,11 @@ export const SaveSystem = {
       const raw = localStorage.getItem(KEY);
       if (!raw) return { ...DEFAULTS };
       return { ...DEFAULTS, ...(JSON.parse(raw) as Partial<SaveData>) };
-    } catch {
-      return { ...DEFAULTS };
-    }
+    } catch { return { ...DEFAULTS }; }
   },
-
   save(data: SaveData): void {
-    try {
-      localStorage.setItem(KEY, JSON.stringify(data));
-    } catch {
-      /* storage unavailable — ignore */
-    }
+    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch {}
   },
-
   update(patch: Partial<SaveData>): SaveData {
     const next = { ...this.load(), ...patch };
     this.save(next);

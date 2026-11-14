@@ -90,6 +90,12 @@ export class ResultPanel {
     this.container.setVisible(true);
     this.container.setAlpha(0);
     this.container.scene.tweens.add({ targets: this.container, alpha: 1, duration: 350 });
+  
+    const customMsg = payload.message;
+    this.subtitle.setText(
+      customMsg ? customMsg
+      : payload.win ? 'The path forward opens.' : 'The void claims another traveller...',
+    );
   }
 
   hide(): void {

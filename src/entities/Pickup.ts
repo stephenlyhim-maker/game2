@@ -4,26 +4,38 @@
 
 import Phaser from 'phaser';
 import { DEPTH } from '../config/GameConfig';
-import type { PickupDef } from '../config/Levels';
+import type { PickupDef, PickupKind } from '../config/Levels';
 
 export class Pickup extends Phaser.GameObjects.Image {
-  readonly kind: 'health';
+  readonly kind: PickupKind;
+  readonly itemId?: string;
+  readonly itemName?: string;
   readonly amount: number;
+  readonly qty: number;
   taken = false;
 
   private baseY: number;
   private t = Math.random() * 6.28;
 
-  constructor(scene: Phaser.Scene, def: PickupDef) {
-    super(scene, def.x, def.y, 'pickup-health');
+  constructor(scene: Phaser.Scene, def: PickupDef, qty = 1) {
+    const textureKey =
+      def.kind === 'quest'    ? 'pickup-quest'
+      : def.kind === 'backpack' ? 'backpack'
+      : def.kind === 'item'     ? 'pickup-item'
+      : 'pickup-health';
+
+    super(scene, def.x, def.y, textureKey);
+
     this.kind = def.kind ?? 'health';
-    this.amount = 25;
+    this.itemId = def.itemId;
+    this.itemName = def.itemName;
+    this.amount = this.kind === 'health' ? 25 : 0;
+    this.qty = qty;
     this.baseY = def.y;
 
     scene.add.existing(this);
     this.setOrigin(0, 0);
     this.setDepth(DEPTH.PICKUP);
-    this.setBlendMode(Phaser.BlendModes.NORMAL);
   }
 
   update(dtMs: number): void {
@@ -34,6 +46,6 @@ export class Pickup extends Phaser.GameObjects.Image {
   }
 
   get bounds(): Phaser.Geom.Rectangle {
-    return new Phaser.Geom.Rectangle(this.x, this.y, 12, 12);
+    return new Phaser.Geom.Rectangle(this.x, this.y, 14, 14);
   }
 }

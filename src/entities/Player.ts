@@ -54,7 +54,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.body.setSize(PLAYER.W, PLAYER.H);
     this.body.setOffset(0, 0);
     this.body.setAllowGravity(false);
-    this.body.setCollideWorldBounds(false);
+    this.body.setCollideWorldBounds(true);
     this.setDepth(DEPTH.PLAYER);
   }
 
@@ -183,7 +183,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   private updateAbilities(input: InputManager): void {
-    if (input.justPressed('dash') && this.dashCdMs <= 0) {
+    if (input.justPressed('dash') && this.dashCdMs <= 0 && this.game.dashEnabled) {
       this.startDash();
     }
     if (input.justPressed('special') && this.specialReady && this.specialMs <= 0) {
